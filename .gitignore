@@ -1,0 +1,25 @@
+.env
+.env.*
+!.env.template
+backend/config/*.key
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+frontend/tmp/
+
+# Rails
+backend/log/*
+backend/tmp/*
+backend/storage/*
+backend/.bundle/
+!backend/log/.keep
+!backend/tmp/.keep
+!backend/storage/.keep
+
+
+.DS_Store
+.vscode/
+*.log
