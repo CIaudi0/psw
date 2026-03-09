@@ -1,0 +1,25 @@
+<section class="container">
+  <div class="header">
+    <h1 class="page-title">Prodotti</h1>
+  </div>
+
+  <form class="filters" (submit)="$event.preventDefault()">
+    <mat-form-field appearance="outline">
+      <mat-label>Titolo</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="search" name="title" placeholder="Cerca per titolo"
+        [(ngModel)]="filters.title" (ngModelChange)="applyFilters()" />
+    </mat-form-field>
+
+    <mat-checkbox name="sale" [(ngModel)]="filters.sale" (ngModelChange)="applyFilters()">Solo sconti</mat-checkbox>
+  </form>
+
+  <app-http-state-card [state]="state()" emptyMessage="Nessun prodotto trovato." (retry)="reload()">
+    <div class="grid">
+      @for (product of products(); track product.id) {
+        <app-product-card [product]="product"></app-product-card>
+      }
+    </div>
+
+  </app-http-state-card>
+</section>

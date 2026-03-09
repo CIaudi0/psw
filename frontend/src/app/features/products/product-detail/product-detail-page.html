@@ -1,0 +1,25 @@
+<div class="medium">
+  <a mat-button routerLink="/products"><mat-icon>arrow_back</mat-icon> Torna al catalogo</a>
+
+  <app-http-state-card [state]="state()" (retry)="load()">
+    @if (product(); as product) {
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ product.title }}</mat-card-title>
+          <mat-card-subtitle>
+            @if (product.sale && product.originalPrice) {
+              <span class="price-original">{{ product.originalPrice | currency: 'EUR' }}</span>
+              <span class="price-sale">{{ product.price | currency: 'EUR' }}</span>
+            } @else {
+              {{ product.price | currency: 'EUR' }}
+            }
+          </mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image [src]="product.thumbnail" [alt]="product.title" />
+        <mat-card-content>
+          <p>{{ product.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
+  </app-http-state-card>
+</div>

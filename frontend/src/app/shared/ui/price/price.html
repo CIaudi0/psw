@@ -1,0 +1,6 @@
+@if (originalPrice(); as original) {
+  <span class="price-original">{{ original | currency: 'EUR' }}</span>
+  <span class="price-sale">{{ product().price | currency: 'EUR' }}</span>
+} @else {
+  <span class="price-sale">{{ product().price | currency: 'EUR' }}</span>
+}

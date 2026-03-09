@@ -1,0 +1,20 @@
+<mat-card appearance="outlined">
+  @if (product().thumbnail) {
+    <img mat-card-image [src]="product().thumbnail" [alt]="product().title" />
+  }
+  <mat-card-header>
+    <mat-card-title>{{ product().title }}</mat-card-title>
+    <mat-card-subtitle><app-price [product]="product()" /></mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p class="description">{{ product().description }}</p>
+    <ng-content></ng-content>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <a mat-button [routerLink]="['/products', product().id]">Dettagli</a>
+    <button mat-flat-button type="button" aria-label="Aggiungi al carrello" (click)="add.emit(product())">
+      <mat-icon aria-hidden="true">add_shopping_cart</mat-icon>
+      Aggiungi
+    </button>
+  </mat-card-actions>
+</mat-card>
