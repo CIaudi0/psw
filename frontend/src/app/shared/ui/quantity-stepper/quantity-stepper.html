@@ -1,0 +1,8 @@
+<button matIconButton type="button" aria-label="Diminuisci quantità" (click)="quantityChange.emit(quantity() - 1)">
+  <mat-icon>remove</mat-icon>
+</button>
+<span class="value">{{ quantity() }}</span>
+<button matIconButton type="button" aria-label="Aumenta quantità" [disabled]="quantity() >= max()"
+  (click)="quantityChange.emit(quantity() + 1)">
+  <mat-icon>add</mat-icon>
+</button>

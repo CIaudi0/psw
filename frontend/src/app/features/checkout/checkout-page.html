@@ -1,0 +1,137 @@
+<div class="medium">
+  <h1 class="page-title">Checkout</h1>
+
+  @if (orderSuccess(); as order) {
+    <app-alert type="success">
+      <h2>Ordine #{{ order.id }} completato con successo!</h2>
+      <p>Totale pagato: {{ order.total | currency: 'EUR' }}. Grazie per il tuo acquisto.</p>
+      <a mat-stroked-button routerLink="/products">Torna al catalogo</a>
+    </app-alert>
+  } @else {
+    @if (orderError(); as message) {
+      <app-alert type="error">
+        <p><strong>{{ message }}</strong></p>
+        <button mat-stroked-button type="button" [disabled]="loading()" (click)="onSubmit()">
+          <mat-icon>refresh</mat-icon>
+          Riprova
+        </button>
+      </app-alert>
+    }
+
+    @if (showSummary() && form.invalid) {
+      <div class="error-summary" role="status" aria-live="polite">
+        <app-alert type="error">
+          Il form contiene {{ errorCount() }} {{ errorCount() === 1 ? 'errore' : 'errori' }}.
+          Controlla i campi evidenziati prima di procedere.
+        </app-alert>
+      </div>
+    }
+
+    <section class="cart-summary">
+      <h2>Riepilogo carrello</h2>
+      @if (cartService.items().length === 0) {
+        <p class="empty-cart">Il carrello è vuoto. Aggiungi prodotti prima di procedere.</p>
+      } @else {
+        <ul class="item-list">
+          @for (item of cartService.items(); track item.productId) {
+            <li class="item-row">
+              <span class="name">{{ item.product.title }}</span>
+              <span>{{ item.quantity }} &times; {{ item.unitPrice | currency: 'EUR' }}</span>
+              <strong class="amount">{{ item.unitPrice * item.quantity | currency: 'EUR' }}</strong>
+            </li>
+          }
+        </ul>
+        <p class="total">Totale: <strong>{{ cartService.totalPrice() | currency: 'EUR' }}</strong></p>
+      }
+    </section>
+
+    <form class="checkout-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <section formGroupName="customer">
+        <h2 class="section-title">Dati cliente</h2>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="firstName" autocomplete="given-name" />
+            @if (hasError('customer.firstName', 'required')) {
+              <mat-error>Il nome è obbligatorio.</mat-error>
+            }
+            @if (hasError('customer.firstName', 'minlength')) {
+              <mat-error>Minimo 2 caratteri.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Cognome</mat-label>
+            <input matInput formControlName="lastName" autocomplete="family-name" />
+            @if (hasError('customer.lastName', 'required')) {
+              <mat-error>Il cognome è obbligatorio.</mat-error>
+            }
+            @if (hasError('customer.lastName', 'minlength')) {
+              <mat-error>Minimo 2 caratteri.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" autocomplete="email" />
+          @if (hasError('customer.email', 'required')) {
+            <mat-error>L'email è obbligatoria.</mat-error>
+          }
+          @if (hasError('customer.email', 'email')) {
+            <mat-error>Inserisci un indirizzo email valido.</mat-error>
+          }
+        </mat-form-field>
+      </section>
+
+      <section formGroupName="address">
+        <h2 class="section-title">Indirizzo</h2>
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Via</mat-label>
+          <input matInput formControlName="street" autocomplete="street-address" />
+          @if (hasError('address.street', 'required')) {
+            <mat-error>La via è obbligatoria.</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Città</mat-label>
+            <input matInput formControlName="city" autocomplete="address-level2" />
+            @if (hasError('address.city', 'required')) {
+              <mat-error>La città è obbligatoria.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>CAP</mat-label>
+            <input matInput formControlName="zip" inputmode="numeric" autocomplete="postal-code" />
+            @if (hasError('address.zip', 'required') || hasError('address.zip', 'pattern')) {
+              <mat-error>Inserisci un CAP a 5 cifre.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="shipping">
+        <h2 class="section-title">Spedizione</h2>
+        <mat-radio-group formControlName="shippingMethod" aria-label="Metodo di spedizione">
+          @for (method of shippingMethods; track method.value) {
+            <mat-radio-button [value]="method.value">{{ method.label }}</mat-radio-button>
+          }
+        </mat-radio-group>
+      </section>
+
+      <div class="confirm">
+        <mat-checkbox formControlName="privacy">Accetto termini e privacy</mat-checkbox>
+        @if (hasError('privacy', 'required')) {
+          <mat-error>Devi accettare termini e privacy per procedere.</mat-error>
+        }
+
+        <app-loading-button [loading]="loading()" [disabled]="form.invalid || cartService.items().length === 0">
+          Conferma ordine
+        </app-loading-button>
+      </div>
+    </form>
+  }
+</div>

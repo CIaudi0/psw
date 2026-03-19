@@ -1,0 +1,10 @@
+<a class="name" [routerLink]="['/products', item().productId]">{{ item().product.title }}</a>
+
+<app-quantity-stepper [quantity]="item().quantity"
+  (quantityChange)="quantityChange.emit($event)" />
+
+<strong class="amount">{{ item().unitPrice * item().quantity | currency: 'EUR' }}</strong>
+
+<button matIconButton type="button" class="danger" aria-label="Rimuovi dal carrello" (click)="remove.emit()">
+  <mat-icon>delete_outline</mat-icon>
+</button>

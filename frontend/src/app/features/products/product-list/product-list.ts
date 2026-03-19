@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ProductService } from '../../../core/services/product';
+import { CartService } from '../../../core/services/cart';
 import { Product, ProductFilters } from '../../../core/models/product';
 import { HttpState } from '../../../shared/http/http-state';
 import { HttpStateCardComponent } from '../../../shared/http/http-state-card/http-state-card';
@@ -21,6 +22,7 @@ import { ProductCardComponent } from '../../../shared/ui/product-card/product-ca
 })
 export class ProductListPageComponent {
   private service = inject(ProductService);
+  private cart = inject(CartService);
 
   protected filters: ProductFilters = { title: '', sale: false };
 
@@ -55,5 +57,9 @@ export class ProductListPageComponent {
     });
     this.products.set(filtered);
     this.state.set({ status: filtered.length === 0 ? 'empty' : 'success' });
+  }
+
+  onAdd(product: Product): void {
+    this.cart.add(product);
   }
 }

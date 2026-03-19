@@ -1,0 +1,27 @@
+<div class="medium">
+  <h1 class="page-title">Carrello</h1>
+
+  @if (cartService.items().length === 0) {
+    <p class="empty">Il carrello è vuoto.</p>
+    <div class="text-center">
+      <a mat-stroked-button routerLink="/products">Vai ai prodotti</a>
+    </div>
+  } @else {
+    <ul class="item-list">
+      @for (item of cartService.items(); track item.productId) {
+        <li>
+          <app-cart-line [item]="item" (quantityChange)="changeQuantity(item, $event)" (remove)="removeFromCart(item)" />
+        </li>
+      }
+    </ul>
+
+    <p class="total">Totale: <strong>{{ cartService.totalPrice() | currency: 'EUR' }}</strong></p>
+
+    <div class="actions">
+      <a mat-flat-button class="big-button" routerLink="/checkout">
+        <mat-icon>shopping_cart_checkout</mat-icon>
+        Procedi al checkout
+      </a>
+    </div>
+  }
+</div>

@@ -1,0 +1,7 @@
+<button mat-flat-button class="big-button" type="submit" [disabled]="disabled() || loading()">
+  @if (loading()) {
+    <mat-progress-spinner mode="indeterminate" diameter="22" aria-label="Invio in corso" />
+  } @else {
+    <ng-content />
+  }
+</button>

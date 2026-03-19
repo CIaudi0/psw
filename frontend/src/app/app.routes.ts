@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { checkoutGuard } from './core/guard/checkout-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -11,6 +12,15 @@ export const routes: Routes = [
     path: 'products/:id',
     loadComponent: () =>
       import('./features/products/product-detail/product-detail-page').then(m => m.ProductDetailPageComponent)
+  },
+  {
+    path: 'cart',
+    loadComponent: () => import('./features/cart/cart-page').then(m => m.CartPageComponent)
+  },
+  {
+    path: 'checkout',
+    canActivate: [checkoutGuard],
+    loadComponent: () => import('./features/checkout/checkout-page').then(m => m.CheckoutPageComponent)
   },
   {
     path: '**',

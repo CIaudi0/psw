@@ -4,4 +4,14 @@
   </a>
 
   <span class="app-title">{{ title() | titlecase }}</span>
+
+  <button matIconButton type="button" aria-label="Carrello" (click)="goToCart()">
+    <mat-icon aria-hidden="false" [matBadge]="cartService.totalCount()" matBadgeColor="warn"
+      [matBadgeHidden]="cartService.totalCount() === 0">shopping_cart</mat-icon>
+  </button>
+
+  <button mat-button type="button" (click)="toggleLogin()">
+    <mat-icon>{{ auth.isLoggedIn() ? 'logout' : 'login' }}</mat-icon>
+    {{ auth.isLoggedIn() ? 'Logout' : 'Login' }}
+  </button>
 </mat-toolbar>
