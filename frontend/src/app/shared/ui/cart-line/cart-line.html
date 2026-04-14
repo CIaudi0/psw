@@ -1,6 +1,6 @@
 <a class="name" [routerLink]="['/products', item().productId]">{{ item().product.title }}</a>
 
-<app-quantity-stepper [quantity]="item().quantity"
+<app-quantity-stepper [quantity]="item().quantity" [max]="item().product.stock"
   (quantityChange)="quantityChange.emit($event)" />
 
 <strong class="amount">{{ item().unitPrice * item().quantity | currency: 'EUR' }}</strong>

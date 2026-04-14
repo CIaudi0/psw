@@ -1,4 +1,7 @@
 <mat-card appearance="outlined">
+  @if (product().stock === 0) {
+    <app-stock-status class="badge" variant="badge" [stock]="product().stock" />
+  }
   @if (product().thumbnail) {
     <img mat-card-image [src]="product().thumbnail" [alt]="product().title" />
   }
@@ -12,7 +15,8 @@
   </mat-card-content>
   <mat-card-actions align="end">
     <a mat-button [routerLink]="['/products', product().id]">Dettagli</a>
-    <button mat-flat-button type="button" aria-label="Aggiungi al carrello" (click)="add.emit(product())">
+    <button mat-flat-button type="button" aria-label="Aggiungi al carrello"
+      [disabled]="product().stock === 0" (click)="add.emit(product())">
       <mat-icon aria-hidden="true">add_shopping_cart</mat-icon>
       Aggiungi
     </button>

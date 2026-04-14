@@ -1,0 +1,9 @@
+@if (variant() === 'badge') {
+  @if (stock() === 0) {
+    <span class="badge">ESAURITO</span>
+  }
+} @else if (stock() === 0) {
+  <p class="out">&#9888; Prodotto esaurito.</p>
+} @else {
+  <p class="available">&#10003; Disponibile ({{ stock() }} in magazzino)</p>
+}

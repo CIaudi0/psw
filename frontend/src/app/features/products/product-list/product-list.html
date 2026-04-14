@@ -21,5 +21,8 @@
       }
     </div>
 
+    @if (meta(); as m) {
+      <app-pagination [page]="page()" [totalPages]="m.totalPages" [total]="m.total" (pageChange)="goToPage($event)" />
+    }
   </app-http-state-card>
 </section>

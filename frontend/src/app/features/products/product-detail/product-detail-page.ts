@@ -8,12 +8,13 @@ import { ProductService } from '../../../core/services/product';
 import { Product } from '../../../core/models/product';
 import { HttpState } from '../../../shared/http/http-state';
 import { HttpStateCardComponent } from '../../../shared/http/http-state-card/http-state-card';
+import { StockStatusComponent } from '../../../shared/ui/stock-status/stock-status';
 
 @Component({
   selector: 'app-product-detail-page',
   imports: [
     CurrencyPipe, RouterLink, MatButtonModule, MatCardModule, MatIconModule,
-    HttpStateCardComponent
+    HttpStateCardComponent, StockStatusComponent
   ],
   templateUrl: './product-detail-page.html',
   styles: `

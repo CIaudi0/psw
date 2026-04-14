@@ -6,16 +6,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ProductService } from '../../../core/services/product';
 import { CartService } from '../../../core/services/cart';
-import { Product, ProductFilters } from '../../../core/models/product';
+import { Product, ProductFilters, ProductsMeta } from '../../../core/models/product';
 import { HttpState } from '../../../shared/http/http-state';
 import { HttpStateCardComponent } from '../../../shared/http/http-state-card/http-state-card';
 import { ProductCardComponent } from '../../../shared/ui/product-card/product-card';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination';
 
 @Component({
   selector: 'app-product-list',
   imports: [
     FormsModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule,
-    HttpStateCardComponent, ProductCardComponent
+    HttpStateCardComponent, ProductCardComponent, PaginationComponent
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss'
@@ -26,8 +27,9 @@ export class ProductListPageComponent {
 
   protected filters: ProductFilters = { title: '', sale: false };
 
-  private allProducts: Product[] = [];
   products = signal<Product[]>([]);
+  meta = signal<ProductsMeta | null>(null);
+  page = signal(1);
   state = signal<HttpState>({ status: 'loading' });
 
   constructor() {
@@ -37,10 +39,11 @@ export class ProductListPageComponent {
   reload(): void {
     this.state.set({ status: 'loading' });
 
-    this.service.list().subscribe({
-      next: (products) => {
-        this.allProducts = products;
-        this.applyFilters();
+    this.service.list(this.filters, this.page()).subscribe({
+      next: (response) => {
+        this.products.set(response.products);
+        this.meta.set(response.meta);
+        this.state.set({ status: response.products.length === 0 ? 'empty' : 'success' });
       },
       error: () => {
         this.state.set({ status: 'error', message: 'Impossibile caricare i prodotti.' });
@@ -49,14 +52,14 @@ export class ProductListPageComponent {
   }
 
   applyFilters(): void {
-    const title = this.filters.title.trim().toLowerCase();
-    const filtered = this.allProducts.filter((product) => {
-      const matchesTitle = !title || product.title.toLowerCase().includes(title);
-      const matchesSale = !this.filters.sale || product.sale;
-      return matchesTitle && matchesSale;
-    });
-    this.products.set(filtered);
-    this.state.set({ status: filtered.length === 0 ? 'empty' : 'success' });
+    this.page.set(1);
+    this.reload();
+  }
+
+  goToPage(page: number): void {
+    this.page.set(page);
+    this.reload();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onAdd(product: Product): void {
