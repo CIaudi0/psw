@@ -1,4 +1,10 @@
 Product.destroy_all
+User.destroy_all
+
+# Utenti
+User.create!(email: 'claudio.astolfi@edu.unife.it', first_name: 'Claudio', last_name: 'Astolfi', role: :admin)
+
+puts "Creati #{User.count} utenti."
 
 # Prodotti
 Product.create!([
