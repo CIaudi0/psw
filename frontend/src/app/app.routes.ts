@@ -23,6 +23,15 @@ export const routes: Routes = [
     loadComponent: () => import('./features/checkout/checkout-page').then(m => m.CheckoutPageComponent)
   },
   {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login').then(m => m.LoginComponent)
+  },
+  {
+    path: 'login/success',
+    loadComponent: () =>
+      import('./features/auth/login-success/login-success').then(m => m.LoginSuccessComponent)
+  },
+  {
     path: '**',
     loadComponent: () => import('./shared/not-found.page').then(m => m.NotFoundPage)
   }

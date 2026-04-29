@@ -28,8 +28,9 @@ export class HeaderComponent {
   toggleLogin(): void {
     if (this.auth.isLoggedIn()) {
       this.auth.logout();
+      this.router.navigate(['/']);
     } else {
-      this.auth.login();
+      this.router.navigate(['/login']);
     }
   }
 }
