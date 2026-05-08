@@ -6,5 +6,12 @@ Rails.application.routes.draw do
 
   defaults format: :json do
     resources :products, only: [ :index, :show ]
+
+    resource :cart, only: [ :show ] do
+      post    "items",         to: "carts#add_item"
+      delete  "items/:id",     to: "carts#remove_item"
+      patch   "items/:id",     to: "carts#update_item"
+      post    "sync",          to: "carts#sync"
+    end
   end
 end
