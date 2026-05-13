@@ -20,6 +20,12 @@
           <p>{{ product.description }}</p>
           <app-stock-status [stock]="product.stock" />
         </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-flat-button type="button" [disabled]="product.stock === 0" (click)="addToCart(product)">
+            <mat-icon aria-hidden="true">add_shopping_cart</mat-icon>
+            Aggiungi al carrello
+          </button>
+        </mat-card-actions>
       </mat-card>
     }
   </app-http-state-card>

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ProductService } from '../../../core/services/product';
+import { CartService } from '../../../core/services/cart';
 import { Product } from '../../../core/models/product';
 import { HttpState } from '../../../shared/http/http-state';
 import { HttpStateCardComponent } from '../../../shared/http/http-state-card/http-state-card';
@@ -24,6 +25,7 @@ import { StockStatusComponent } from '../../../shared/ui/stock-status/stock-stat
 export class ProductDetailPageComponent {
   private route = inject(ActivatedRoute);
   private svc = inject(ProductService);
+  private cartService = inject(CartService);
 
   product = signal<Product | null>(null);
   state = signal<HttpState>({ status: 'loading' });
@@ -46,5 +48,9 @@ export class ProductDetailPageComponent {
         this.state.set({ status: 'error', message: message });
       }
     });
+  }
+
+  addToCart(product: Product): void {
+    this.cartService.add(product);
   }
 }

@@ -28,6 +28,7 @@ export class HeaderComponent {
   toggleLogin(): void {
     if (this.auth.isLoggedIn()) {
       this.auth.logout();
+      this.cartService.loadCart();
       this.router.navigate(['/']);
     } else {
       this.router.navigate(['/login']);
