@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { CartService } from '../../core/services/cart';
 import { OrderService } from '../../core/services/order';
+import { AuthService } from '../../core/services/auth-service';
 import { Order, SHIPPING_METHODS, ShippingMethod } from '../../core/models/order';
 import { apiErrors } from '../../shared/http/api-error';
 import { AlertComponent } from '../../shared/ui/alert/alert';
@@ -38,9 +39,10 @@ const FIELDS = [
   templateUrl: './checkout-page.html',
   styleUrl: './checkout-page.scss'
 })
-export class CheckoutPageComponent {
+export class CheckoutPageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private orderService = inject(OrderService);
+  private auth = inject(AuthService);
   cartService = inject(CartService);
 
   shippingMethods = SHIPPING_METHODS;
@@ -64,6 +66,18 @@ export class CheckoutPageComponent {
     shippingMethod: ['standard' as ShippingMethod, Validators.required],
     privacy: [false, Validators.requiredTrue]
   });
+
+  ngOnInit(): void {
+    this.auth.me().subscribe((user) => {
+      this.form.patchValue({
+        customer: {
+          firstName: user.firstName || '',
+          lastName: user.lastName || '',
+          email: user.email
+        }
+      });
+    });
+  }
 
   getControl(path: string) {
     return this.form.get(path);
@@ -102,10 +116,7 @@ export class CheckoutPageComponent {
     this.orderService.create({
       customer: value.customer,
       address: value.address,
-      shippingMethod: value.shippingMethod,
-      items: this.cartService.items(),
-      total: this.cartService.totalPrice(),
-      createdAt: new Date().toISOString()
+      shippingMethod: value.shippingMethod
     }).subscribe({
       next: (order) => {
         this.loading.set(false);

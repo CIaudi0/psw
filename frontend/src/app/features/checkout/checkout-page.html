@@ -5,7 +5,7 @@
     <app-alert type="success">
       <h2>Ordine #{{ order.id }} completato con successo!</h2>
       <p>Totale pagato: {{ order.total | currency: 'EUR' }}. Grazie per il tuo acquisto.</p>
-      <a mat-stroked-button routerLink="/products">Torna al catalogo</a>
+      <a mat-stroked-button [routerLink]="['/orders', order.id]">Vedi l'ordine</a>
     </app-alert>
   } @else {
     @if (orderError(); as message) {

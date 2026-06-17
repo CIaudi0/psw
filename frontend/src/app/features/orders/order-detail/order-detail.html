@@ -1,0 +1,44 @@
+<div class="medium">
+  <a mat-button routerLink="/orders"><mat-icon>arrow_back</mat-icon> Torna agli ordini</a>
+
+  <app-http-state-card [state]="state()" (retry)="load()">
+    @if (order(); as o) {
+      <h1 class="page-title">Ordine #{{ o.id }}</h1>
+      <div class="card-list">
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <p><strong>Data:</strong> {{ o.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+            <p><strong>Stato:</strong> {{ statusLabel(o.status) }}</p>
+            <p><strong>Cliente:</strong> {{ o.customer.firstName }} {{ o.customer.lastName }} ({{ o.customer.email }})</p>
+            <p><strong>Indirizzo:</strong> {{ o.address.street }}, {{ o.address.zip }} {{ o.address.city }}</p>
+            <p><strong>Spedizione:</strong> {{ shippingLabel(o.shippingMethod) }}</p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Prodotti</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="item-list">
+              @for (item of o.items; track item.id) {
+                <li class="item-row">
+                  <a class="name" [routerLink]="['/products', item.productId]">
+                    @if (item.product) {
+                      {{ item.product.title }}
+                    } @else {
+                      Prodotto non più disponibile
+                    }
+                  </a>
+                  <span>{{ item.quantity }} &times; {{ item.unitPrice | currency: 'EUR' }}</span>
+                  <strong class="amount">{{ item.lineTotal | currency: 'EUR' }}</strong>
+                </li>
+              }
+            </ul>
+            <p class="total">Totale: <strong>{{ o.total | currency: 'EUR' }}</strong></p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+  </app-http-state-card>
+</div>

@@ -5,6 +5,12 @@
 
   <span class="app-title">{{ title() | titlecase }}</span>
 
+  @if (auth.isLoggedIn()) {
+    <a matIconButton routerLink="/orders" aria-label="I miei ordini">
+      <mat-icon>receipt_long</mat-icon>
+    </a>
+  }
+
   <button matIconButton type="button" aria-label="Carrello" (click)="goToCart()">
     <mat-icon aria-hidden="false" [matBadge]="cartService.totalCount()" matBadgeColor="warn"
       [matBadgeHidden]="cartService.totalCount() === 0">shopping_cart</mat-icon>

@@ -1,0 +1,56 @@
+<div class="medium">
+  <h1 class="page-title">{{ showAll ? 'Tutti gli ordini' : 'I miei ordini' }}</h1>
+
+  <form class="form-row" [formGroup]="filters" (ngSubmit)="load()" aria-label="Filtri ordini">
+    <mat-form-field appearance="outline">
+      <mat-label>Stato</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="">Tutti</mat-option>
+        @for (s of statuses; track s.value) {
+          <mat-option [value]="s.value">{{ s.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Dal</mat-label>
+      <input matInput type="date" formControlName="from" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Al</mat-label>
+      <input matInput type="date" formControlName="to" />
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-flat-button type="submit">Filtra</button>
+      @if (hasFilters) {
+        <button mat-button type="button" (click)="resetFilters()">Azzera</button>
+      }
+    </div>
+  </form>
+
+  <app-http-state-card [state]="state()" [emptyMessage]="emptyMessage" (retry)="load()">
+    <div class="card-list">
+      @for (order of orders(); track order.id) {
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Ordine #{{ order.id }}</mat-card-title>
+            <mat-card-subtitle>Effettuato il {{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            @if (showAll) {
+              <p><strong>Utente:</strong> {{ order.userEmail }}</p>
+            }
+            <p><strong>Stato:</strong> {{ statusLabel(order.status) }}</p>
+            <p><strong>Articoli:</strong> {{ order.itemsCount }}</p>
+            <p><strong>Totale:</strong> {{ order.total | currency: 'EUR' }}</p>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <a mat-button [routerLink]="['/orders', order.id]">Dettaglio</a>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  </app-http-state-card>
+</div>
