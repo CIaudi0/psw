@@ -7,7 +7,7 @@ class ProductsController < ApplicationController
     per_page = 12 if per_page < 1
     per_page = 48 if per_page > 48
 
-    products = Product.all
+    products = Product.with_attached_image
     products = products.search(params[:q]) if params[:q].present?
     products = products.on_sale if params[:sale] == "true"
 

@@ -8,6 +8,10 @@ Rails.application.routes.draw do
     resources :products, only: [ :index, :show ]
     resources :orders, only: [ :index, :show, :create ]
 
+    namespace :vendor do
+      resources :products, only: [ :update, :create, :destroy ]
+    end
+
     resource :cart, only: [ :show ] do
       post    "items",         to: "carts#add_item"
       delete  "items/:id",     to: "carts#remove_item"

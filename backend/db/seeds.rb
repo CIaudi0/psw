@@ -1,13 +1,19 @@
+CartItem.destroy_all
+Cart.destroy_all
+OrderItem.destroy_all
+Order.destroy_all
 Product.destroy_all
 User.destroy_all
 
 # Utenti
 User.create!(email: 'claudio.astolfi@edu.unife.it', first_name: 'Claudio', last_name: 'Astolfi', role: :admin)
 
+vendor = User.create!(email: 'claudio00astolfi@gmail.com', first_name: 'Claudio', last_name: 'Astolfi', role: :vendor)
+
 puts "Creati #{User.count} utenti."
 
 # Prodotti
-Product.create!([
+products = Product.create!([
   { title: "MacBook Pro 16",
     description: "Il MacBook Pro con chip M5 si presenta come un portatile maturo e raffinato, capace di spingere ancora più in alto gli standard già elevati della linea Pro. Le prestazioni fanno un salto deciso grazie al nuovo processore, che offre velocità superiori e una gestione dell'intelligenza artificiale molto più avanzata, pensata per lavorare in locale con rapidità e sicurezza. L'esperienza d'uso risulta fluida anche sotto carichi pesanti, merito della CPU e GPU a 10 core e della memoria unificata ottimizzata per i flussi professionali. Il display Liquid Retina XDR continua a essere uno dei punti di forza, con luminosità elevata e una resa cromatica ideale per chi lavora con contenuti visivi. Nel complesso, è un dispositivo che non rivoluziona il design, ma perfeziona ogni aspetto tecnico per offrire un equilibrio convincente tra potenza, autonomia e qualità costruttiva.",
     price: 2499.00, original_price: 2899.00, sale: true, stock: 5,
@@ -73,5 +79,11 @@ Product.create!([
     price: 24.90, original_price: 35.00, sale: true, stock: 60,
     thumbnail: "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=800&q=80" }
 ])
+
+products.each_with_index do |product, index|
+  if index.even?
+    product.update!(vendor: vendor)
+  end
+end
 
 puts "Creati #{Product.count} prodotti."

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   before_action :set_current_user
+  before_action :set_active_storage_url_options
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
@@ -31,6 +32,12 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def require_vendor!
+    if current_user.nil? || !(current_user.vendor? || current_user.admin?)
+      render_error "Accesso negato: Solo Venditori", :forbidden
+    end
+  end
+
   def build_token(user)
     payload = {
       user_id: user.id,
@@ -40,6 +47,10 @@ class ApplicationController < ActionController::API
     }
 
     JWT.encode(payload, Rails.application.secret_key_base)
+  end
+
+  def set_active_storage_url_options
+    ActiveStorage::Current.url_options = { protocol: request.protocol, host: request.host, port: request.port }
   end
 
   def render_error(messages, status)
