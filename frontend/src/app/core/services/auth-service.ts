@@ -2,6 +2,7 @@ import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Product } from '../models/product';
 import { TokenPayload, User } from '../models/user';
 
 const TOKEN_KEY = 'shop_token';
@@ -33,6 +34,14 @@ export class AuthService {
 
   isAdmin = computed(() => this.userRole() === 'admin');
   isVendor = computed(() => this.userRole() === 'vendor' || this.userRole() === 'admin');
+
+  canManage(product: Product): boolean {
+    if (this.isAdmin()) {
+      return true;
+    }
+    const user = this.currentUser();
+    return this.isVendor() && user !== null && product.vendorId === user.user_id;
+  }
 
   me(): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/auth/me`);

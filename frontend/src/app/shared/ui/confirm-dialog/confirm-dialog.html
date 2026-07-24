@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Conferma eliminazione</h2>
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+  <p><strong>L'azione è irreversibile.</strong></p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Annulla</button>
+  <button mat-flat-button class="danger" [mat-dialog-close]="true">Sì, elimina</button>
+</mat-dialog-actions>

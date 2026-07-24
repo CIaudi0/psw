@@ -1,0 +1,85 @@
+<div class="medium">
+  <h1 class="page-title">{{ isEditMode ? 'Modifica prodotto' : 'Aggiungi nuovo prodotto' }}</h1>
+
+  <form class="form-column" [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Titolo del prodotto</mat-label>
+      <input matInput formControlName="title" placeholder="Es. Laptop Ultra 14" />
+      @if (hasError('title', 'required')) {
+        <mat-error>Il titolo è obbligatorio.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Prezzo (€)</mat-label>
+        <input matInput type="number" formControlName="price" min="0.01" step="0.01" />
+        @if (hasError('price', 'required') || hasError('price', 'min')) {
+          <mat-error>Il prezzo deve essere maggiore di zero.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Prezzo originale (€)</mat-label>
+        <input matInput type="number" formControlName="originalPrice" min="0" step="0.01" />
+        <mat-hint>Lascia 0 se non è in sconto</mat-hint>
+        @if (hasError('originalPrice', 'min')) {
+          <mat-error>Il prezzo originale non può essere negativo.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Quantità in stock</mat-label>
+        <input matInput type="number" formControlName="stock" min="0" step="1" />
+        @if (hasError('stock', 'required') || hasError('stock', 'min')) {
+          <mat-error>Lo stock non può essere negativo.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-checkbox formControlName="sale">Prodotto in sconto</mat-checkbox>
+
+    <fieldset class="image-fieldset">
+      <legend class="muted">Immagine del prodotto</legend>
+
+      <div class="image-row">
+        <app-product-image class="preview" [src]="preview()" alt="Anteprima dell'immagine" />
+
+        <div class="image-buttons">
+          <input #fileInput hidden type="file" accept="image/jpeg,image/png,image/webp,image/gif"
+            aria-label="Carica una foto" (change)="onFileSelected($event)" />
+          <button mat-stroked-button type="button" (click)="fileInput.click()">
+            <mat-icon>upload</mat-icon>
+            Carica una foto
+          </button>
+          @if (hasUploadedImage()) {
+            <button mat-button type="button" (click)="removeImage()">Rimuovi la foto</button>
+          }
+          <span class="muted">JPG, PNG, WebP o GIF, massimo 5 MB</span>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Oppure incolla il link di un'immagine</mat-label>
+        <input matInput formControlName="thumbnail" (input)="imageMissing.set(false)" />
+      </mat-form-field>
+
+      @if (imageMissing()) {
+        <p class="image-error" role="alert">Carica una foto oppure inserisci il link di un'immagine.</p>
+      }
+    </fieldset>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrizione dettagliata</mat-label>
+      <textarea matInput formControlName="description" rows="5"></textarea>
+      @if (hasError('description', 'required')) {
+        <mat-error>La descrizione è obbligatoria.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-button type="button" (click)="goBack()">Annulla</button>
+      <button mat-flat-button class="big-button" type="submit">{{ isEditMode ? 'Salva' : 'Pubblica' }}</button>
+    </div>
+  </form>
+</div>

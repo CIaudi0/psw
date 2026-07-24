@@ -8,6 +8,8 @@ export interface Product {
   thumbnail?: string;
   createdAt: string;
   stock: number;
+  vendorId: number | null;
+  imageAttached: boolean;
 }
 
 export interface ProductFilters {
@@ -26,3 +28,18 @@ export interface ProductsResponse {
   products: Product[];
   meta: ProductsMeta;
 }
+
+export interface ProductInput {
+  title: string;
+  description: string;
+  price: number;
+  originalPrice: number;
+  sale: boolean;
+  stock: number;
+  thumbnail: string;
+  image: File | null;
+  removeImage: boolean;
+}
+
+export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024;

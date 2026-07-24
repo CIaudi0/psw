@@ -3,6 +3,12 @@
     <mat-icon>storefront</mat-icon>
   </a>
 
+  @if (auth.isVendor()) {
+    <a matIconButton routerLink="/vendor/dashboard" aria-label="Aggiungi prodotto">
+      <mat-icon>library_add</mat-icon>
+    </a>
+  }
+
   <span class="app-title">{{ title() | titlecase }}</span>
 
   @if (auth.isLoggedIn()) {

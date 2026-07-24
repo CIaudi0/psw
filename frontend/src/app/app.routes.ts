@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guard/auth-guard';
 import { checkoutGuard } from './core/guard/checkout-guard';
+import { vendorGuard } from './core/guard/vendor-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -8,6 +9,12 @@ export const routes: Routes = [
     path: 'products',
     loadComponent: () =>
       import('./features/products/product-list/product-list').then(m => m.ProductListPageComponent)
+  },
+  {
+    path: 'products/edit/:id',
+    loadComponent: () =>
+      import('./features/vendor/product-form/product-form').then(m => m.ProductFormComponent),
+    canActivate: [vendorGuard]
   },
   {
     path: 'products/:id',
@@ -31,6 +38,12 @@ export const routes: Routes = [
     path: 'login/success',
     loadComponent: () =>
       import('./features/auth/login-success/login-success').then(m => m.LoginSuccessComponent)
+  },
+  {
+    path: 'vendor/dashboard',
+    loadComponent: () =>
+      import('./features/vendor/product-form/product-form').then(m => m.ProductFormComponent),
+    canActivate: [vendorGuard]
   },
   {
     path: 'orders',

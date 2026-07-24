@@ -21,6 +21,12 @@
           <app-stock-status [stock]="product.stock" />
         </mat-card-content>
         <mat-card-actions align="end">
+          @if (auth.canManage(product)) {
+            <a mat-button [routerLink]="['/products/edit', product.id]"><mat-icon>edit</mat-icon> Modifica</a>
+            <button mat-flat-button type="button" class="danger" (click)="removeProduct(product)">
+              <mat-icon>delete</mat-icon> Elimina
+            </button>
+          }
           <button mat-flat-button type="button" [disabled]="product.stock === 0" (click)="addToCart(product)">
             <mat-icon aria-hidden="true">add_shopping_cart</mat-icon>
             Aggiungi al carrello
