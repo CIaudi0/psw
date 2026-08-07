@@ -32,6 +32,12 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def require_admin!
+    if current_user.nil? || !current_user.admin?
+      render_error "Accesso negato: Solo Admin", :forbidden
+    end
+  end
+
   def require_vendor!
     if current_user.nil? || !(current_user.vendor? || current_user.admin?)
       render_error "Accesso negato: Solo Venditori", :forbidden

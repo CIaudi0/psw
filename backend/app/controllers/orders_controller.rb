@@ -2,7 +2,11 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    orders = current_user.orders.includes(:order_items, :user).order(created_at: :desc)
+    show_all = params[:all] == "true"
+    return render_error "Accesso negato", :forbidden if show_all && !current_user.admin?
+
+    scope = show_all ? Order.all : current_user.orders
+    orders = scope.includes(:order_items, :user).order(created_at: :desc)
 
     if params[:status].present?
       unless Order.statuses.key?(params[:status])
@@ -39,7 +43,8 @@ class OrdersController < ApplicationController
   end
 
   def show
-    order = current_user.orders.includes(order_items: :product).find(params[:id])
+    scope = current_user.admin? ? Order.all : current_user.orders
+    order = scope.includes(order_items: :product).find(params[:id])
     render json: order
   end
 

@@ -8,6 +8,10 @@ Rails.application.routes.draw do
     resources :products, only: [ :index, :show ]
     resources :orders, only: [ :index, :show, :create ]
 
+    namespace :admin do
+      resources :users, only: [ :update, :destroy, :index ]
+    end
+
     namespace :vendor do
       resources :products, only: [ :update, :create, :destroy ]
     end
