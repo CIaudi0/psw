@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/guard/admin-guard';
 import { authGuard } from './core/guard/auth-guard';
 import { checkoutGuard } from './core/guard/checkout-guard';
 import { vendorGuard } from './core/guard/vendor-guard';
@@ -40,6 +41,12 @@ export const routes: Routes = [
       import('./features/auth/login-success/login-success').then(m => m.LoginSuccessComponent)
   },
   {
+    path: 'admin/dashboard',
+    loadComponent: () =>
+      import('./features/admin/admin-dashboard/admin-dashboard').then(m => m.AdminDashboardComponent),
+    canActivate: [adminGuard]
+  },
+  {
     path: 'vendor/dashboard',
     loadComponent: () =>
       import('./features/vendor/product-form/product-form').then(m => m.ProductFormComponent),
@@ -50,6 +57,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/orders/order-list/order-list').then(m => m.OrderListComponent),
     canActivate: [authGuard]
+  },
+  {
+    path: 'orders/all',
+    loadComponent: () =>
+      import('./features/orders/order-list/order-list').then(m => m.OrderListComponent),
+    canActivate: [adminGuard],
+    data: { all: true }
   },
   {
     path: 'orders/:id',

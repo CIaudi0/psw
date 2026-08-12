@@ -3,6 +3,12 @@
     <mat-icon>storefront</mat-icon>
   </a>
 
+  @if (auth.isAdmin()) {
+    <a matIconButton routerLink="/admin/dashboard" aria-label="Dashboard amministratore">
+      <mat-icon>dashboard</mat-icon>
+    </a>
+  }
+
   @if (auth.isVendor()) {
     <a matIconButton routerLink="/vendor/dashboard" aria-label="Aggiungi prodotto">
       <mat-icon>library_add</mat-icon>
