@@ -2,7 +2,9 @@ class ApplicationController < ActionController::API
   before_action :set_current_user
   before_action :set_active_storage_url_options
 
+  rescue_from StandardError, with: :internal_error
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from ActionController::ParameterMissing, with: :bad_request
 
   private
 
@@ -63,7 +65,16 @@ class ApplicationController < ActionController::API
     render json: { errors: Array(messages) }, status: status
   end
 
+  def bad_request(exception)
+    render_error "Parametro mancante: #{exception.param}", :bad_request
+  end
+
   def not_found
     render_error "Risorsa non trovata", :not_found
+  end
+
+  def internal_error(exception)
+    Rails.logger.error(exception.full_message)
+    render_error "Errore interno del server", :internal_server_error
   end
 end
