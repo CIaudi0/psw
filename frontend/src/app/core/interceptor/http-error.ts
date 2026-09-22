@@ -12,6 +12,9 @@ export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 0 || error.status >= 500) {
         notify.show('Errore di rete, riprova più tardi.');
       }
+      if (error.status === 403) {
+        notify.show('Non hai il permesso.');
+      }
       return throwError(() => error);
     })
   );

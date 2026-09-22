@@ -9,6 +9,8 @@ services:
     healthcheck:
       test: pg_isready -U ${POSTGRES_USER}
       interval: 5s
+    ports:
+      - "5432:5432"
 
   api:
     build: ./backend
@@ -16,6 +18,5 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
 volumes:
   postgres_data:
